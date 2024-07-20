@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { addTask } from '../config/services/task';
+import { toast } from "react-hot-toast";
 
-const AddTaskForm = ({ onAddTask }) => {
+const AddTaskForm = ({ handleForm }) => {
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
 
@@ -12,17 +14,27 @@ const AddTaskForm = ({ onAddTask }) => {
     setTaskDescription(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!taskName || !taskDescription) {
-      alert('Please fill in both fields.');
+      toast.error('Please fill in both fields.');
       return;
     }
-    const newTask = {
-      name: taskName,
+    const params = {
+      title: taskName,
       description: taskDescription,
     };
-    onAddTask(newTask);
+
+    try {
+      const result = await addTask(params);
+      console.log(result, 'RESULT');
+      toast.success('Task added successfully!');
+      handleForm()
+    } catch (error) {
+      toast.error('Failed to add task.');
+      console.error(error);
+    }
+
     setTaskName('');
     setTaskDescription('');
   };
@@ -49,7 +61,10 @@ const AddTaskForm = ({ onAddTask }) => {
           placeholder="Enter task description"
         />
       </div>
-      <button type="submit">Add Task</button>
+      <div className="button-group">
+        <button type="submit">Add Task</button>
+        <button type="button" onClick={() => handleForm()}>Cancel</button>
+      </div>
     </form>
   );
 };
