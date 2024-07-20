@@ -18,7 +18,27 @@ const getTasks = async (params) => {
   }
 };
 
+const deleteTask = async (params) => {
+  try {
+    const result = await TaskControls.deleteTask(params);
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const updateTask = async (params) => {
+  try {
+    const result = await TaskControls.updateTask(params);
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 module.exports = {
   addTask,
-  getTasks
+  getTasks,
+  deleteTask,
+  updateTask
 };
