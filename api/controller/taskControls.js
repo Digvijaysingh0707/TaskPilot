@@ -3,6 +3,7 @@ const Task = require("../model/TaskModel")
 const addTask = async (params) => {
   try {
     const result = await Task.create(params);
+    console.log(result, 'THIS IS RESULT')
     return result;
   } catch (error) {
     throw new Error(error.message);

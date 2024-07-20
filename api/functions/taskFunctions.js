@@ -1,25 +1,24 @@
-const TaskControls = require("../controller/taskControls")
+const TaskControls = require("../controller/taskControls");
 
-const addTask = async (req, res) => {
+const addTask = async (params) => {
   try {
-    const result = await taskService.addTask(req.body);
-    res.status(201).send(result);
+    const result = await TaskControls.addTask(params);
+    return result;
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-const getTasks = async (req, res) => {
+const getTasks = async (params) => {
   try {
-    const params = req.query;
-    const result = await taskService.getTasks(params);
-    res.status(200).send(result);
+    const result = await TaskControls.getTasks(params);
+    return result;
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
 module.exports = {
   addTask,
   getTasks
-}
+};
