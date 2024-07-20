@@ -1,11 +1,8 @@
-import logo from './logo.svg';
-import './App.css';
+import TaskRoutes from './TaskRoutes';
 
 function App() {
   return (
-    <div>
-      Hello world
-    </div>
+    <TaskRoutes />
   );
 }
 
