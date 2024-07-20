@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
-import { addTask } from '../config/services/task';
+import { addTask, updateTask } from '../config/services/task';
 import { toast } from "react-hot-toast";
+import { Box, Modal } from '@mui/material';
 
-const AddTaskForm = ({ handleForm }) => {
-  const [taskName, setTaskName] = useState('');
-  const [taskDescription, setTaskDescription] = useState('');
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+const AddTaskForm = ({ form, toggleForm, task, action }) => {
+  const [taskName, setTaskName] = useState(task?.title || "");
+  const [taskDescription, setTaskDescription] = useState(task?.description || "");
 
   const handleNameChange = (e) => {
     setTaskName(e.target.value);
@@ -20,16 +33,25 @@ const AddTaskForm = ({ handleForm }) => {
       toast.error('Please fill in both fields.');
       return;
     }
-    const params = {
+    let params = {
       title: taskName,
       description: taskDescription,
     };
 
+    if (task) {
+      params = { ...params, _id: task?._id }
+    }
+
     try {
-      const result = await addTask(params);
-      console.log(result, 'RESULT');
-      toast.success('Task added successfully!');
-      handleForm()
+      if (task) {
+        const result = await updateTask(params)
+      }
+      else {
+        const result = await addTask(params);
+        toast.success('Task added successfully!');
+      }
+      // handleForm()
+      toggleForm(!form)
     } catch (error) {
       toast.error('Failed to add task.');
       console.error(error);
@@ -40,32 +62,40 @@ const AddTaskForm = ({ handleForm }) => {
   };
 
   return (
-    <form className="add-task-form" onSubmit={handleSubmit}>
-      <h2>Add New Task</h2>
-      <div>
-        <label htmlFor="taskName">Task Name:</label>
-        <input
-          type="text"
-          id="taskName"
-          value={taskName}
-          onChange={handleNameChange}
-          placeholder="Enter task name"
-        />
-      </div>
-      <div>
-        <label htmlFor="taskDescription">Description:</label>
-        <textarea
-          id="taskDescription"
-          value={taskDescription}
-          onChange={handleDescriptionChange}
-          placeholder="Enter task description"
-        />
-      </div>
-      <div className="button-group">
-        <button type="submit">Add Task</button>
-        <button type="button" onClick={() => handleForm()}>Cancel</button>
-      </div>
-    </form>
+    <Modal
+      open={form}
+      onClose={() => toggleForm(false)}
+      aria-labelledby="task-details-title"
+      aria-describedby="task-details-description"
+    >
+      <Box sx={modalStyle}>
+        <form className="add-task-form" onSubmit={handleSubmit}>
+          <h2>Add New Task</h2>
+          <div>
+            <label htmlFor="taskName">Task Name:</label>
+            <input
+              type="text"
+              id="taskName"
+              value={taskName}
+              onChange={handleNameChange}
+              placeholder="Enter task name"
+            />
+          </div>
+          <div>
+            <label htmlFor="taskDescription">Description:</label>
+            <textarea
+              id="taskDescription"
+              value={taskDescription}
+              onChange={handleDescriptionChange}
+              placeholder="Enter task description"
+            />
+          </div>
+          <div className="button-group">
+            <button type="submit">{action} Task</button>
+          </div>
+        </form>
+      </Box>
+    </Modal>
   );
 };
 

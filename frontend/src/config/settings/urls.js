@@ -5,5 +5,7 @@ export const endPoint = {
   task: {
     addTask: "/taskManager/task",
     getTasks: "/taskManager/task",
+    deleteTask: "/taskManager/task",
+    updateTask: "/taskManager/task",
   },
 };

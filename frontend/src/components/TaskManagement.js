@@ -9,12 +9,16 @@ const TaskManagement = () => {
     setAddForm(!addForm)
   }
   return (
-    <div>
-      <button className='btn' onClick={handleForm}>Add Task</button>
+    <div className="container">
+      <button className="btn" onClick={handleForm}>Add Task</button>
       {addForm &&
-        <AddTaskForm handleForm={handleForm} />
+        <AddTaskForm form={addForm} toggleForm={setAddForm} action={"Add"} />
       }
-      <TaskList status={"pending"} />
+      <div className="flex-container">
+        <TaskList status={"pending"} className="task-list" />
+        <TaskList status={"in progress"} className="task-list" />
+        <TaskList status={"done"} className="task-list" />
+      </div>
     </div>
   )
 }
