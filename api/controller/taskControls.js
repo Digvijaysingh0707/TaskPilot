@@ -29,8 +29,20 @@ const deleteTask = async (taskId) => {
 
 const updateTask = async (params) => {
   try {
-    let { title, description, _id } = params
-    const result = await Task.findByIdAndUpdate({ _id }, { title, description }, { new: true });
+    let { title, description, _id, status } = params
+    let updateQuery = {}
+    if (params?.title) {
+      updateQuery.title = title
+    }
+
+    if (params?.status) {
+      updateQuery.status = status
+    }
+
+    if (params?.description) {
+      updateQuery.description = description
+    }
+    const result = await Task.findByIdAndUpdate({ _id }, updateQuery, { new: true });
     return result;
   } catch (error) {
     throw new Error(error?.message);
