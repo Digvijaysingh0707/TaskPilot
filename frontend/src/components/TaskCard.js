@@ -19,7 +19,7 @@ const modalStyle = {
   p: 4,
 };
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, colIndex, taskIndex }) => {
   const [viewModal, setViewModal] = useState(false);
   const [editModal, setEditModal] = useState(false)
 
@@ -42,15 +42,27 @@ const TaskCard = ({ task }) => {
     setEditModal(false);
   };
 
+  const handleOnDrag = (e) => {
+    e.dataTransfer.setData(
+      "text",
+      JSON.stringify({ taskIndex, prevColIndex: colIndex, taskId: task?._id })
+    );
+  };
+
   return (
     <div className="task-card">
-      <h3>{task.title}</h3>
-      <p>{task.description}</p>
-      <p>Created at: {new Date(task.createdAt).toLocaleString()}</p>
-      <div className="task-card-buttons">
-        <button className="delete-button" onClick={() => handleClick("delete")}>Delete</button>
-        <button className="edit-button" onClick={() => handleClick("edit")}>Edit</button>
-        <button className="view-details-button" onClick={() => handleClick("viewDetails")}>View Details</button>
+      <div
+        draggable
+        onDragStart={handleOnDrag}
+      >
+        <h3>{task.title}</h3>
+        <p>{task.description}</p>
+        <p>Created at: {new Date(task.createdAt).toLocaleString()}</p>
+        <div className="task-card-buttons">
+          <button className="delete-button" onClick={() => handleClick("delete")}>Delete</button>
+          <button className="edit-button" onClick={() => handleClick("edit")}>Edit</button>
+          <button className="view-details-button" onClick={() => handleClick("viewDetails")}>View Details</button>
+        </div>
       </div>
 
       <Modal

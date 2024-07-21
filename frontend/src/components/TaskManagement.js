@@ -15,9 +15,9 @@ const TaskManagement = () => {
         <AddTaskForm form={addForm} toggleForm={setAddForm} action={"Add"} />
       }
       <div className="flex-container">
-        <TaskList status={"pending"} className="task-list" />
-        <TaskList status={"in progress"} className="task-list" />
-        <TaskList status={"done"} className="task-list" />
+        <TaskList status={"pending"} colIndex={0} className="task-list" />
+        <TaskList status={"in progress"} colIndex={1} className="task-list" />
+        <TaskList status={"done"} colIndex={2} className="task-list" />
       </div>
     </div>
   )
