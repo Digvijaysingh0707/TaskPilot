@@ -15,5 +15,5 @@ connectDB();
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 app.use("/taskManager", taskRoutes)
-app.use("/users", userRoutes)
+app.use("/user", userRoutes)
 
