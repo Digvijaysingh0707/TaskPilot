@@ -19,7 +19,18 @@ const duplicateUser = async (params) => {
   }
 }
 
+const findUser = async (params) => {
+  try {
+    const result = await User.findOne(params)
+    return result
+  }
+  catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 module.exports = {
   duplicateUser,
-  addUser
+  addUser,
+  findUser
 }

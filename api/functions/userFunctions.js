@@ -1,4 +1,5 @@
 const userControls = require("../controller/userControls");
+const jwt = require('jsonwebtoken');
 
 const addUser = async (params) => {
   try {
@@ -25,8 +26,41 @@ const addUser = async (params) => {
   }
 };
 
+const findUser = async (params) => {
+  try {
+    const { email, password } = params;
+    if (!email || !password) {
+      throw new Error("Please enter all fields")
+    }
+    const user = await userControls.findUser({ email })
+    if (!user) {
+      throw new Error("Invalid Credentials")
+    }
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    const token = await new Promise((resolve, reject) => {
+      jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(token);
+        }
+      });
+    });
+
+    return token;
+  }
+  catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 
 module.exports = {
   addUser,
-
+  findUser
 };

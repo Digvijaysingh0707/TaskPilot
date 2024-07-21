@@ -1,8 +1,9 @@
 const express = require("express");
 const taskRouter = express.Router();
 const taskFunctions = require("../functions/taskFunctions");
+const authMiddleware = require("../middleware/auth");
 
-taskRouter.post('/task', async (req, res) => {
+taskRouter.post('/task', authMiddleware, async (req, res) => {
   try {
     const result = await taskFunctions.addTask(req.body);
     res.status(201).send(result);
@@ -11,7 +12,7 @@ taskRouter.post('/task', async (req, res) => {
   }
 });
 
-taskRouter.get('/task', async (req, res) => {
+taskRouter.get('/task', authMiddleware, async (req, res) => {
   try {
     const params = req.query;
     const result = await taskFunctions.getTasks(params);
@@ -21,7 +22,7 @@ taskRouter.get('/task', async (req, res) => {
   }
 });
 
-taskRouter.delete('/task/:id', async (req, res) => {
+taskRouter.delete('/task/:id', authMiddleware, async (req, res) => {
   try {
     const taskId = req.params.id;
     const result = await taskFunctions.deleteTask(taskId);
@@ -31,7 +32,7 @@ taskRouter.delete('/task/:id', async (req, res) => {
   }
 });
 
-taskRouter.put('/task', async (req, res) => {
+taskRouter.put('/task', authMiddleware, async (req, res) => {
   try {
     const result = await taskFunctions.updateTask(req.body);
     res.status(200).send(result);
