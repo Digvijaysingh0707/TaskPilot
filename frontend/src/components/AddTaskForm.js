@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { addTask, updateTask } from '../config/services/task';
 import { Box, Modal } from '@mui/material';
+import { toast } from 'react-toastify';
 
 const modalStyle = {
   position: 'absolute',
@@ -29,6 +30,7 @@ const AddTaskForm = ({ form, toggleForm, task, action }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!taskName || !taskDescription) {
+      toast.error("Fill all fields")
       return;
     }
     let params = {
@@ -43,11 +45,14 @@ const AddTaskForm = ({ form, toggleForm, task, action }) => {
     try {
       if (task) {
         const result = await updateTask(params)
+        let { message } = result?.data
+        toast.success(message)
       }
       else {
         const result = await addTask(params);
+        let { message } = result?.data
+        toast.success(message)
       }
-      // handleForm()
       toggleForm(!form)
     } catch (error) {
       console.error(error);
