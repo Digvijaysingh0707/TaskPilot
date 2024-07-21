@@ -8,7 +8,8 @@ export const endPoint = {
     deleteTask: "/taskManager/task",
     updateTask: "/taskManager/task",
   },
-  user:{
-    addUser:"/user/signup"
+  user: {
+    addUser: "/user/signup",
+    loginUser: "/user/login"
   }
 };
