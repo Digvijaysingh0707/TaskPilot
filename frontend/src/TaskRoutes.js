@@ -1,18 +1,23 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import React from "react";
 import TaskManagement from "./components/TaskManagement";
 import Signup from "./components/Signup";
+import LoginPage from "./components/LoginPage";
 
 const TaskRoutes = () => {
+  const userToken = localStorage.getItem("token");
+
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" exact element={<TaskManagement />} />
-          <Route path="/signup" exact element={<Signup />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={userToken ? <TaskManagement /> : <Navigate to="/login" />}
+        />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
