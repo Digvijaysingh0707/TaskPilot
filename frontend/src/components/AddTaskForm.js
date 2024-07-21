@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { addTask, updateTask } from '../config/services/task';
-import { toast } from "react-hot-toast";
 import { Box, Modal } from '@mui/material';
 
 const modalStyle = {
@@ -30,7 +29,6 @@ const AddTaskForm = ({ form, toggleForm, task, action }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!taskName || !taskDescription) {
-      toast.error('Please fill in both fields.');
       return;
     }
     let params = {
@@ -48,12 +46,10 @@ const AddTaskForm = ({ form, toggleForm, task, action }) => {
       }
       else {
         const result = await addTask(params);
-        toast.success('Task added successfully!');
       }
       // handleForm()
       toggleForm(!form)
     } catch (error) {
-      toast.error('Failed to add task.');
       console.error(error);
     }
 

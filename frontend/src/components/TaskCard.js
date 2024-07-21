@@ -19,7 +19,7 @@ const modalStyle = {
   p: 4,
 };
 
-const TaskCard = ({ task, colIndex, taskIndex }) => {
+const TaskCard = ({ task, colIndex, taskIndex, tasks, setTasks }) => {
   const [viewModal, setViewModal] = useState(false);
   const [editModal, setEditModal] = useState(false)
 
@@ -47,6 +47,11 @@ const TaskCard = ({ task, colIndex, taskIndex }) => {
       "text",
       JSON.stringify({ taskIndex, prevColIndex: colIndex, taskId: task?._id })
     );
+
+    setTimeout(() => {
+      let updatedList = tasks.filter(item => item?._id !== task?._id)
+      setTasks(updatedList)
+    }, 1500)
   };
 
   return (
