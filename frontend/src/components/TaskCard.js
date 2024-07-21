@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import AddTaskForm from './AddTaskForm';
+import { toast } from 'react-toastify';
 
 
 const modalStyle = {
@@ -19,13 +20,13 @@ const modalStyle = {
   p: 4,
 };
 
-const TaskCard = ({ task, colIndex, taskIndex, tasks, setTasks }) => {
+const TaskCard = ({ task, colIndex, taskIndex, tasks, setTasks, setSelectedTask }) => {
   const [viewModal, setViewModal] = useState(false);
   const [editModal, setEditModal] = useState(false)
 
   const handleClick = async (type) => {
     if (type === "delete") {
-      await deleteTask(task._id);
+      setSelectedTask(task?._id)
     } else if (type === "viewDetails") {
       setViewModal(true);
     }
