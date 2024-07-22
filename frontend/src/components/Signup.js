@@ -1,11 +1,11 @@
-// src/components/Signup.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addUser } from '../config/services/user';
 import { useNavigate } from 'react-router-dom';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const Signup = () => {
   const {
@@ -15,9 +15,11 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate()
+  const [signupLoader, setSignupLoader] = useState(false)
 
   const onSubmit = async (data) => {
     try {
+      setSignupLoader(true)
       const result = await addUser(data);
       toast.success('User Registered!');
       navigate("/login")
@@ -26,6 +28,10 @@ const Signup = () => {
       // console.error(error);
       const { error } = err?.response?.data
       toast.error(error ?? 'Signup failed. Please try again.');
+    }
+    finally {
+      setSignupLoader(false)
+
     }
   };
 
@@ -99,15 +105,18 @@ const Signup = () => {
           error={!!errors.confirmPassword}
           helperText={errors.confirmPassword?.message}
         />
-        <Button
+        <LoadingButton
           type="submit"
           fullWidth
+          loading={signupLoader}
           variant="contained"
-          color="primary"
+          loadingIndicator={<CircularProgress color="inherit" size={20} />}
           sx={{ mt: 3, mb: 2 }}
         >
           Sign Up
-        </Button>
+        </LoadingButton>
+
+
       </Box>
     </Box>
   );
