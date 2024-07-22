@@ -4,27 +4,25 @@ import { loginUser } from '../config/services/user';
 import { useNavigate } from 'react-router-dom';
 import { TaskContext } from '../App';
 import axios from 'axios';
-import { CircularProgress } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, CircularProgress, TextField, Typography } from '@mui/material';
+import { useForm } from 'react-hook-form';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const { setUserDetails } = useContext(TaskContext);
   const [loginLoader, setLoginLoader] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!email || !password) {
-      toast.error('Please enter all fields.');
-      return;
-    }
-
+  const onSubmit = async (data) => {
     try {
       setLoginLoader(true);
-      const result = await loginUser({ email, password });
+      const result = await loginUser(data);
       toast.success('Login successful!');
       const response = result.data;
       const token = response?.token;
@@ -46,38 +44,58 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit}>
-        <h2>Login</h2>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-          />
-        </div>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: 8,
+      }}
+    >
+      <Typography variant="h4" component="h1">
+        Login
+      </Typography>
+      <Box
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{ mt: 3, width: '100%', maxWidth: '400px' }}
+      >
+        <TextField
+          fullWidth
+          label="Email"
+          margin="normal"
+          {...register('email', {
+            required: 'Email is required',
+            pattern: {
+              value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+              message: 'Invalid email address',
+            },
+          })}
+          error={!!errors.email}
+          helperText={errors.email?.message}
+        />
+
+        <TextField
+          fullWidth
+          label="Password"
+          type="password"
+          margin="normal"
+          {...register('password', { required: 'Password is required' })}
+          error={!!errors.password}
+          helperText={errors.password?.message}
+        />
         <LoadingButton
           variant="contained"
           color="primary"
+          fullWidth
           loading={loginLoader}
           loadingIndicator={<CircularProgress color="inherit" size={20} />}
           type="submit"
         >
           Login
         </LoadingButton>
-      </form>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
