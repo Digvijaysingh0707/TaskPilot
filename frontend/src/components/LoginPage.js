@@ -4,13 +4,15 @@ import { loginUser } from '../config/services/user';
 import { useNavigate } from 'react-router-dom';
 import { TaskContext } from '../App';
 import axios from 'axios';
+import { CircularProgress } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton'; // Correct import for LoadingButton
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setUserDetails } = useContext(TaskContext)
-  const navigate = useNavigate()
-
+  const { setUserDetails } = useContext(TaskContext);
+  const [loginLoader, setLoginLoader] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,22 +23,25 @@ const LoginPage = () => {
     }
 
     try {
-      const result = await loginUser({ email, password })
+      setLoginLoader(true);
+      const result = await loginUser({ email, password });
       toast.success('Login successful!');
-      let response = result.data
-      let token = response?.token
-      let userEmail = response?.email
-      let name = response?.userName
+      const response = result.data;
+      const token = response?.token;
+      const userEmail = response?.email;
+      const name = response?.userName;
       localStorage.setItem('token', token);
       localStorage.setItem('userEmail', userEmail);
       localStorage.setItem('userName', name);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUserDetails({ name })
-      navigate("/tasks")
+      setUserDetails({ name });
+      navigate("/tasks");
     } catch (error) {
-      let errorMessage = error?.response?.data?.error
+      const errorMessage = error?.response?.data?.error;
       toast.error(errorMessage ?? "Something went wrong!");
       console.error(error);
+    } finally {
+      setLoginLoader(false);
     }
   };
 
@@ -62,7 +67,15 @@ const LoginPage = () => {
             placeholder="Enter your password"
           />
         </div>
-        <button type="submit">Login</button>
+        <LoadingButton
+          variant="contained"
+          color="primary"
+          loading={loginLoader}
+          loadingIndicator={<CircularProgress color="inherit" size={20} />}
+          type="submit"
+        >
+          Login
+        </LoadingButton>
       </form>
     </div>
   );
