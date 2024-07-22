@@ -17,6 +17,11 @@ const taskSchema = new Schema(
       enum: ['pending', 'in-progress', 'done'],
       default: 'pending',
     },
+    userEmail: {
+      type: String,
+      required: true,
+      trim: true
+    }
   },
   {
     timestamps: true,
