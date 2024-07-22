@@ -14,7 +14,7 @@ userRouter.post('/signup', async (req, res) => {
 userRouter.post('/login', async (req, res) => {
   try {
     const result = await userFunctions.findUser(req.body);
-    res.status(201).send({ token: result });
+    res.status(201).send(result);
   } catch (error) {
     res.status(400).send({ error: error.message || 'An error occurred' });
   }

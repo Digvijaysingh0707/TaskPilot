@@ -36,6 +36,7 @@ const findUser = async (params) => {
     if (!user) {
       throw new Error("Invalid Credentials")
     }
+    let userName = user?.firstName
     const payload = {
       user: {
         id: user.id,
@@ -51,8 +52,8 @@ const findUser = async (params) => {
         }
       });
     });
-
-    return token;
+    let result = { email, token, userName }
+    return result;
   }
   catch (error) {
     throw new Error(error.message);
