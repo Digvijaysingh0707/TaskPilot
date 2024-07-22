@@ -1,15 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { deleteTask, getTasks, updateTask } from '../config/services/task'
 import TaskCard from './TaskCard';
 import { STATUS } from '../constants/constants';
 import { toast } from 'react-toastify';
-import { TaskContext } from '../App';
 
 const TaskList = ({ status, colIndex }) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState("")
   const [userEmail] = useState(localStorage.getItem("userEmail"))
-  const { userDetails, setUserDetails } = useContext(TaskContext)
 
   const fetchTasks = async (taskStatus) => {
     try {
@@ -17,7 +15,6 @@ const TaskList = ({ status, colIndex }) => {
       const result = await getTasks(params);
       setTasks(result?.data);
     } catch (error) {
-      // toast.error('Failed to fetch tasks.');
       console.error(error);
     }
   };
@@ -62,7 +59,7 @@ const TaskList = ({ status, colIndex }) => {
   useEffect(() => {
     if (selectedTask?.length == 0) return
     handleDeleteTask()
-  }, [selectedTask, userDetails?.taskAdded == true])
+  }, [selectedTask])
 
   return (
     <div
@@ -70,9 +67,12 @@ const TaskList = ({ status, colIndex }) => {
       onDragOver={handleOnDragOver}
       className="task-list">
       <h3>{status?.toUpperCase()}</h3>
-      {tasks?.map((task, index) =>
+      {tasks?.length > 0 ? tasks?.map((task, index) =>
         <TaskCard key={task._id} task={task} colIndex={colIndex} taskIndex={index} tasks={tasks} setTasks={setTasks} setSelectedTask={setSelectedTask} />
-      )}
+      )
+        :
+        "No task found!"
+      }
     </div>
   )
 }
