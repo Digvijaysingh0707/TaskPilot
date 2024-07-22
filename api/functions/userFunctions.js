@@ -1,5 +1,8 @@
 const userControls = require("../controller/userControls");
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+const saltRounds = 10;
 
 const addUser = async (params) => {
   try {
@@ -19,7 +22,12 @@ const addUser = async (params) => {
       throw new Error("User already exists")
     }
 
-    const result = await userControls.addUser(params);
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    let query = { firstName, lastName, email, password: hashedPassword }
+
+    const result = await userControls.addUser(query);
     return result;
   } catch (error) {
     throw new Error(error.message);
@@ -29,13 +37,23 @@ const addUser = async (params) => {
 const findUser = async (params) => {
   try {
     const { email, password } = params;
+
     if (!email || !password) {
       throw new Error("Please enter all fields")
     }
+    
     const user = await userControls.findUser({ email })
+
     if (!user) {
       throw new Error("Invalid Credentials")
     }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      throw new Error("Invalid Credentials")
+    }
+
     let userName = user?.firstName
     const payload = {
       user: {

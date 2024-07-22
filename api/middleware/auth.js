@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
-  console.log(req.headers['Authorization'], 'req.headers')
   const token = req.headers['authorization']?.split(' ')[1];
 
   if (!token) {
@@ -13,7 +12,7 @@ const authMiddleware = (req, res, next) => {
       return res.status(401).json({ message: 'Invalid token' });
     }
 
-    req.user = decoded.user; // Attach user info to request
+    req.user = decoded.user;
     next();
   });
 };
