@@ -17,8 +17,10 @@ const TaskRoutes = () => {
           element={userToken ? <TaskManagement /> : <Navigate to="/login" />}
         />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        {!userToken &&
+          <Route path="/login" element={<LoginPage />} />
+        }
+        <Route path="*" element={userToken ? <Navigate to="/tasks" /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );
