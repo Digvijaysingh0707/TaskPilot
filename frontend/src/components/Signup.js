@@ -5,6 +5,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addUser } from '../config/services/user';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const {
@@ -13,12 +14,14 @@ const Signup = () => {
     watch,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate()
 
   const onSubmit = async (data) => {
     try {
       const result = await addUser(data);
-      toast.success('Signup successful!');
-      console.log(result, "USER DATA");
+      toast.success('User Registered!');
+      navigate("/login")
+
     } catch (err) {
       // console.error(error);
       const { error } = err?.response?.data

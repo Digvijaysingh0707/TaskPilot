@@ -18,6 +18,7 @@ const modalStyle = {
 const AddTaskForm = ({ form, toggleForm, task, action }) => {
   const [taskName, setTaskName] = useState(task?.title || "");
   const [taskDescription, setTaskDescription] = useState(task?.description || "");
+  const [userEmail] = useState(localStorage.getItem("userEmail"))
 
   const handleNameChange = (e) => {
     setTaskName(e.target.value);
@@ -49,7 +50,7 @@ const AddTaskForm = ({ form, toggleForm, task, action }) => {
         toast.success(message)
       }
       else {
-        const result = await addTask(params);
+        const result = await addTask({ ...params, userEmail });
         let { message } = result?.data
         toast.success(message)
       }

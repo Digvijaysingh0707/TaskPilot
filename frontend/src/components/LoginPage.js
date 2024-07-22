@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import { loginUser } from '../config/services/user';
 import { useNavigate } from 'react-router-dom';
+import { TaskContext } from '../App';
+import axios from 'axios';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setUserDetails } = useContext(TaskContext)
   const navigate = useNavigate()
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,10 +23,19 @@ const LoginPage = () => {
     try {
       const result = await loginUser({ email, password })
       toast.success('Login successful!');
-      localStorage.setItem('token', result.data.token);
-      navigate("/")
+      let response = result.data
+      let token = response?.token
+      let userEmail = response?.email
+      let name = response?.userName
+      localStorage.setItem('token', token);
+      localStorage.setItem('userEmail', userEmail);
+      localStorage.setItem('userName', name);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setUserDetails({ name })
+      navigate("/tasks")
     } catch (error) {
-      toast.error('Login failed. Please try again.');
+      let errorMessage = error?.response?.data?.error
+      toast.error(errorMessage ?? "Something went wrong!");
       console.error(error);
     }
   };

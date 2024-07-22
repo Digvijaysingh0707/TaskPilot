@@ -50,7 +50,7 @@ const TaskCard = ({ task, colIndex, taskIndex, tasks, setTasks, setSelectedTask 
     );
 
     setTimeout(() => {
-      let updatedList = tasks.filter(item => item?._id !== task?._id)
+      let updatedList = tasks?.filter(item => item?._id !== task?._id)
       setTasks(updatedList)
     }, 1500)
   };

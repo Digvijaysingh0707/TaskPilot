@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { deleteTask, getTasks, updateTask } from '../config/services/task'
 import TaskCard from './TaskCard';
 import { STATUS } from '../constants/constants';
 import { toast } from 'react-toastify';
+import { TaskContext } from '../App';
 
 const TaskList = ({ status, colIndex }) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState("")
-
+  const [userEmail] = useState(localStorage.getItem("userEmail"))
+  const { userDetails, setUserDetails } = useContext(TaskContext)
 
   const fetchTasks = async (taskStatus) => {
     try {
-      const params = { status: taskStatus };
+      const params = { status: taskStatus, userEmail };
       const result = await getTasks(params);
       setTasks(result?.data);
     } catch (error) {
@@ -60,8 +62,8 @@ const TaskList = ({ status, colIndex }) => {
   useEffect(() => {
     if (selectedTask?.length == 0) return
     handleDeleteTask()
-  }, [selectedTask])
-  
+  }, [selectedTask, userDetails?.taskAdded == true])
+
   return (
     <div
       onDrop={handleOnDrop}
