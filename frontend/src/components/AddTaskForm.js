@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { addTask, updateTask } from '../config/services/task';
 import { Box, Modal } from '@mui/material';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const modalStyle = {
   position: 'absolute',
@@ -19,6 +20,7 @@ const AddTaskForm = ({ form, toggleForm, task, action }) => {
   const [taskName, setTaskName] = useState(task?.title || "");
   const [taskDescription, setTaskDescription] = useState(task?.description || "");
   const [userEmail] = useState(localStorage.getItem("userEmail"))
+  const navigate = useNavigate()
 
   const handleNameChange = (e) => {
     setTaskName(e.target.value);
@@ -54,12 +56,11 @@ const AddTaskForm = ({ form, toggleForm, task, action }) => {
         let { message } = result?.data
         toast.success(message)
       }
-      window.location.reload();
       toggleForm(!form)
     } catch (error) {
       console.error(error);
     }
-
+    navigate(0)
     setTaskName('');
     setTaskDescription('');
   };

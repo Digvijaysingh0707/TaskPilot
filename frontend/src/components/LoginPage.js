@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { TaskContext } from '../App';
 import axios from 'axios';
 import { CircularProgress } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton'; // Correct import for LoadingButton
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
