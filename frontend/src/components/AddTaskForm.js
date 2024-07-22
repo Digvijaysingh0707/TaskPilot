@@ -54,6 +54,7 @@ const AddTaskForm = ({ form, toggleForm, task, action }) => {
         let { message } = result?.data
         toast.success(message)
       }
+      window.location.reload();
       toggleForm(!form)
     } catch (error) {
       console.error(error);
