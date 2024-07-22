@@ -10,7 +10,10 @@ const App = () => {
   return (
     <TaskContext.Provider value={{ userDetails, setUserDetails }}>
       <TaskRoutes />
-      <ToastContainer />
+      <ToastContainer
+        autoClose={1000}
+
+      />
     </TaskContext.Provider>
   )
 }
